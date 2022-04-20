@@ -70,7 +70,7 @@ void Plane::sortPartition(int low, int high) {
     return i;
 }
 
-void Plane::addPoint() {
+void Plane::addPoint(Point* p, unsigned int x, unsigned int y) {
 }
 
 void Plane::gScan() {
