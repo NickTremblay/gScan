@@ -1,3 +1,6 @@
+#ifndef POINT_H
+#define POINT_H
+
 #include <iostream>
 #include <string>
 
@@ -7,9 +10,11 @@ class Point {
     unsigned int y;
     
     public:
-    point(unsigned int x, unsigned int y);
+    Point(unsigned int x, unsigned int y);
     void changeColor(std::string color);
     void drawLine(Point* p, std::string color);
     
     friend class Plane;
 };
+
+#endif

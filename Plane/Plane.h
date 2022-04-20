@@ -1,3 +1,6 @@
+#ifndef PLANE_H
+#define PLANE_H
+
 #include "../Point/Point.h"
 #include <iostream>
 #include <string>
@@ -21,3 +24,5 @@ class Plane {
     void addPoint(Point* p, unsigned int x, unsigned int y); //update bounds & render on gui
     void gScan(std::stack<Point*>* s); //gscan algorithm
 };
+
+#endif
