@@ -73,5 +73,5 @@ void Plane::sortPartition(int low, int high) {
 void Plane::addPoint(Point* p, unsigned int x, unsigned int y) {
 }
 
-void Plane::gScan() {
+void Plane::gScan(std::stack<Point*>* s) {
 }

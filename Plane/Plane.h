@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <stack>
 
 class Plane {
     private:
@@ -18,5 +19,5 @@ class Plane {
     void sortRecurse(int min); //quick sort, gets called in sort points
     void sortPartition(); //called in quick sort to find partition and sort around partition
     void addPoint(Point* p, unsigned int x, unsigned int y); //update bounds & render on gui
-    void gScan(std::stack* s); //gscan algorithm
+    void gScan(std::stack<Point*>* s); //gscan algorithm
 };
