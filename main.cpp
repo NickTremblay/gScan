@@ -101,13 +101,13 @@ int main(){
                     continue;
                 }
                 
-                if(x > plane.width){
+                if(y > plane.height){
                     std::cout << "Invalid y coord try again" << std::endl;
                     continue;
                 }
                 
                 // Declare new point on p and add to plane
-                Point* p = new Point(x, y);
+                Point* p = new Point(x, y, "#000000");
                 plane.addPoint(p);
                 
                 // Prompt user for another coord
