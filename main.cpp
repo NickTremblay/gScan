@@ -54,8 +54,10 @@ int main(){
     }
     
     // TODO: INIT SFML WINDOW OBJECT
-    // TODO: INIT COORD PLANE OBJECT
     
+    Plane plane(500, 500);
+    
+    // Append points to plane based on contextChoice
     switch(contextChoice){
         case 1:{
             // Click on plane-
@@ -80,14 +82,55 @@ int main(){
                     
                 }catch(const std::exception&){
                     std::cout << "Invalid x coord try again" << std::endl;
+                    continue;
                 }
                 
+                if(x > plane.width){
+                    std::cout << "Invalid x coord try again" << std::endl;
+                    continue;
+                }
+                
+                unsigned int y;
+                std::cout << "Enter Y:";
+                // Validate y
+                try{
+                    std::cin >> y;
+                    
+                }catch(const std::exception&){
+                    std::cout << "Invalid y coord try again" << std::endl;
+                    continue;
+                }
+                
+                if(x > plane.width){
+                    std::cout << "Invalid y coord try again" << std::endl;
+                    continue;
+                }
+                
+                // Declare new point on p and add to plane
+                Point* p = new Point(x, y);
+                plane.addPoint(p);
+                
+                // Prompt user for another coord
+                char enterAnotherCoord;
+                while(true){
+                    // Overridden if invalid x or y
+                    std::cout << "Enter another coord(y/n)? ";
+                    
+                    try{
+                        std::cin >> enterAnotherCoord;
+                    }catch(const std::exception&){
+                        std::cout << std::endl;
+                        continue;
+                    }
+                    
+                    if(enterAnotherCoord != 'y' && enterAnotherCoord != 'n'){
+                        std::cout << std::endl;
+                        continue;
+                    }else break;
+                }
+                
+                if(enterAnotherCoord == 'n') break;
             }
-            
-            // call addPoint after instantiating point object
-            // break loop when escape phrase is entered
-            
-            
             break;}
             
         case 3: {
