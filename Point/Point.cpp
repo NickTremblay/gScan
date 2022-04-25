@@ -9,7 +9,7 @@ Point::Point(unsigned int x, unsigned int y, std::string c) {
 }
 
 void Point::changeColor(std::string c) {
-    this->color = color;
+    this->color = c;
 }
 
 void Point::drawLine(Point* p, std::string c) {

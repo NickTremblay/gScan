@@ -139,7 +139,7 @@ int main(){
     }
     
     // Init SFML window
-    sf::Window window(sf::VideoMode(plane.width, plane.height), "gScan");
+    sf::RenderWindow window(sf::VideoMode(plane.width, plane.height), "gScan");
     
     
     //////////////////////////////////////
@@ -156,6 +156,21 @@ int main(){
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        
+        // Set background color and clear previous frame
+        window.clear(sf::Color(255, 255, 255, 255));
+        
+        // Draw each point in plane
+        for(int i  = 0; i < plane.points.size(); i++){
+            Point* p = plane.points[i];
+            sf::CircleShape circle(3.f);
+            circle.setPosition(sf::Vector2f(p->x, p->y));
+            circle.setFillColor(sf::Color(0, 0, 0));
+            window.draw(circle);
+        }
+        
+        // Display new frame
+        window.display();
     }
     
     return 0;

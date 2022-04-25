@@ -5,13 +5,11 @@
 #include <string>
 
 class Point {
-    private:
+    public:
+    Point(unsigned int x, unsigned int y, std::string c);
     unsigned int x;
     unsigned int y;
     std::string color;
-    
-    public:
-    Point(unsigned int x, unsigned int y, std::string c);
     void changeColor(std::string c);
     void drawLine(Point* p, std::string c);
     

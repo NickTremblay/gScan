@@ -9,14 +9,10 @@
 #include <stack>
 
 class Plane {
-    private:
-    std::pair<unsigned int,unsigned int> xBounds;
-    std::pair<unsigned int,unsigned int> yBounds;
-    std::vector<Point*> points;
-    
     public:
     unsigned int width;
     unsigned int height;
+    std::vector<Point*> points;
     Plane(unsigned int w, unsigned int h);
     void sortPoints(); //sorts all points in the vector, first in vector is bottom point, and remaining are sorted based on angle
     void sortRecurse(int low, int high); //quick sort, gets called in sort points
