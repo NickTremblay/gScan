@@ -53,8 +53,6 @@ int main(){
         }
     }
     
-    // TODO: INIT SFML WINDOW OBJECT
-    
     Plane plane(500, 500);
     
     // Append points to plane based on contextChoice
@@ -140,7 +138,25 @@ int main(){
         }
     }
     
-    // TODO: MAIN SFML LOOP
+    // Init SFML window
+    sf::Window window(sf::VideoMode(plane.width, plane.height), "gScan");
+    
+    
+    //////////////////////////////////////
+    // MAIN SFML LOOP /
+    /////////////////////////////////////
+
+    while (window.isOpen())
+    {
+        // Event listener
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // Handle window close
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+    }
     
     return 0;
 }
