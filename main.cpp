@@ -53,5 +53,51 @@ int main(){
         }
     }
     
+    // TODO: INIT SFML WINDOW OBJECT
+    // TODO: INIT COORD PLANE OBJECT
+    
+    switch(contextChoice){
+        case 1:{
+            // Click on plane-
+            // Set window event listener for SFML window object on heap in main loop
+            // Instantiate point object using data from event object passed into handler
+            // Call w.addPoint(p)
+            // Listen for escape key to terminate event listener and call gScan driver
+            break;}
+            
+        case 2:{
+            // Manually enter
+            
+            // Init flag for valid coords
+            bool validCoords = false;
+            while(!validCoords){
+                unsigned int x;
+                std::cout << "Enter X:";
+                
+                // Validate x
+                try{
+                    std::cin >> x;
+                    
+                }catch(const std::exception&){
+                    std::cout << "Invalid x coord try again" << std::endl;
+                }
+                
+            }
+            
+            // call addPoint after instantiating point object
+            // break loop when escape phrase is entered
+            
+            
+            break;}
+            
+        case 3: {
+            // Enter from file-
+            
+            break;
+        }
+    }
+    
+    // TODO: MAIN SFML LOOP
+    
     return 0;
 }
