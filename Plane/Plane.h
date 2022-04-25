@@ -17,7 +17,7 @@ class Plane {
     unsigned int height;
     
     public:
-    Plane(char importMode);
+    Plane(unsigned int w, unsigned int h);
     void sortPoints(); //sorts all points in the vector, first in vector is bottom point, and remaining are sorted based on angle
     void sortRecurse(int low, int high); //quick sort, gets called in sort points
     int sortPartition(int low, int high); //called in quick sort to find partition and sort around partition

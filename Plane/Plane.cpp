@@ -4,7 +4,9 @@
 #include <utility>
 #include <vector>
 
-Plane::Plane(char importMode) {
+Plane::Plane(unsigned int w, unsigned int h) {
+    this->width = w;
+    this->height = h;
 }
 
 void Plane::sortPoints() {
