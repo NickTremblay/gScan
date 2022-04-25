@@ -74,6 +74,15 @@ int Plane::sortPartition(int low, int high) {
 }
 
 void Plane::addPoint(Point* p) {
+    points.push_back(p);
+    
+    if(p->x >= width - 20){
+        height += 20;
+    }
+    
+    if(p->y >= height - 20){
+        height += 20;
+    }
 }
 
 void Plane::gScan(std::stack<Point*>* s) {

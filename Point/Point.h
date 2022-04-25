@@ -12,8 +12,8 @@ class Point {
     
     public:
     Point(unsigned int x, unsigned int y, std::string c);
-    void changeColor(std::string color);
-    void drawLine(Point* p, std::string color);
+    void changeColor(std::string c);
+    void drawLine(Point* p, std::string c);
     
     friend class Plane;
 };
