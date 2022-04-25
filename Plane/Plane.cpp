@@ -50,11 +50,11 @@ void Plane::sortPartition(int low, int high) {
         float j_ang = (j_point->y - base->y) / (j_point->x - base->x);
         float p_ang = (pivot->y - base->y) / (pivot->x - base->x);
         //flips all the negative slopes so that angles are counted in the right order
-        if(j_ang < 0) {j_ang = 1 / j_ang;}
-        if(p_ang < 0) {p_ang = 1 / p_ang;}
+        j_ang = 1 / j_ang;
+        p_ang = 1 / p_ang;
         
         //actual quicksort swapping
-        if(j_ang < p_ang) {
+        if(j_ang > p_ang) {
             i++;
             //swap i and j
             Point* temp = this->points[i];
@@ -70,8 +70,54 @@ void Plane::sortPartition(int low, int high) {
     return i;
 }
 
-void Plane::addPoint(Point* p, unsigned int x, unsigned int y) {
+void Plane::addPoint() {
 }
 
-void Plane::gScan(std::stack<Point*>* s) {
+void Plane::gScan(std::stack* s) {
+    //draws red line from start point to first point, pushes first 2 points to stack, sets counter i to 2
+    int i = 2;
+    (this->points[0])->drawLine(this->points[1],red);
+    s.push(this->points[0]);
+    s.push(this->points[1]);
+    
+    this->gRecurse(s,i);
+}
+
+void Plane::gRecurse(std::stack* s, int i) {
+    //initial condition: i is the last in the point vector
+    if(i == (this->points).length()-1)) {
+        return;
+    }
+    
+    //draw blue line, push next point to stack
+    s.top()->drawLine(this->points[i]);
+    s.push(this->points[i]);
+    
+    //check direction of turn using top 3 points of stack
+    Point* p3 = s.top();
+    s.pop();
+    Point* p2 = s.top();
+    s.pop();
+    Point* p1 = s.top();
+    
+    float slope1 = (p2->y - p1->y) / (p2->x - p1->x);
+    float slope2 = (p3->y - p2->y) / (p3->x - p2->x);
+    slope1 = 1/slope1;
+    slope2 = 1/slope2;
+    
+    s.push(p2);
+    s.push(p3);
+    
+    
+    //if left turn, call again with i+1
+    if(slope2 / slope1) {
+        this->gRecurse(s,i+1);
+    }
+    
+    //if right turn, pop 2 off stack, remove their lines, keep i the same
+    else {
+        s.pop();
+        s.pop();
+        this->gRecurse(s,i);
+    }
 }

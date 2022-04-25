@@ -21,8 +21,9 @@ class Plane {
     void sortPoints(); //sorts all points in the vector, first in vector is bottom point, and remaining are sorted based on angle
     void sortRecurse(int min); //quick sort, gets called in sort points
     void sortPartition(); //called in quick sort to find partition and sort around partition
-    void addPoint(Point* p, unsigned int x, unsigned int y); //update bounds & render on gui
+    void addPoint(Point* p); //update bounds & render on gui
     void gScan(std::stack<Point*>* s); //gscan algorithm
+    void gRecurse(std::stack<Point*>* s, int i); //recursive part of gscan algorithm
 };
 
 #endif
