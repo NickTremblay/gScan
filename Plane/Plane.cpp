@@ -1,4 +1,6 @@
 #include "Plane.h"
+#include "../Line/Line.hpp"
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
 #include <utility>
@@ -89,10 +91,12 @@ void Plane::addLine(Line* l){
     lines.push_back(l);
 }
 
-void Plane::gScan(std::stack<Point*>* s) {
+void Plane::gScan() {
+    std::stack<Point*>* s;
     //draws red line from start point to first point, pushes first 2 points to stack, sets counter i to 2
     int i = 2;
-    (this->points[0])->drawLine(this->points[1], "#FF0000");
+    addLine(new Line(this->points[0]->x, this->points[0]->y, this->points[1]->x, this->points[1]->y, sf::Color(255, 0, 0, 255)));
+    
     s->push(this->points[0]);
     s->push(this->points[1]);
     
@@ -106,7 +110,7 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     }
     
     //draw blue line, push next point to stack
-    s->top()->drawLine(this->points[i], "blue");
+    addLine(new Line(s->top()->x, s->top()->y, this->points[i]->x, this->points[i]->y, sf::Color(0, 0, 255, 255)));
     s->push(this->points[i]);
     
     //check direction of turn using top 3 points of stack

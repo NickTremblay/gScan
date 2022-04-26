@@ -21,7 +21,7 @@ class Plane {
     int sortPartition(int low, int high); //called in quick sort to find partition and sort around partition
     void addPoint(Point* p); //update bounds & render on gui
     void addLine(Line* l); // render line
-    void gScan(std::stack<Point*>* s); //gscan algorithm
+    void gScan(); //gscan algorithm
     void gRecurse(std::stack<Point*>* s, int i); //recursive part of gscan algorithm
 };
 
