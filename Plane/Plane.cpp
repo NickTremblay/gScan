@@ -16,27 +16,27 @@ void Plane::sortPoints() {
     Point* min = this->points[0];
     int min_idx = 0;
     for(int i=0; i<points.size(); i++) {
-        if(points[i]->y < min->y) {
+        if(points[i]->y > min->y) {
             if(points[i]->x <= min->x) {
                 min = points[i];
                 min_idx = i;
             }
         }
     }
-    int i = points.size() - 1;
+
     //switches the bottom left point to first in the vector
     Point* temp = this->points[0];
-    this->points[0] = this->points[i];
-    this->points[i] = temp;
+    this->points[0] = this->points[min_idx];
+    this->points[min_idx] = temp;
     
     //calls a quicksort function to sort the vector relative to the min
-    this->sortRecurse(1,this->points.size());
+    this->sortRecurse(1,this->points.size() - 1);
 }
 
 void Plane::sortRecurse(int low, int high) {
     //quick sort, orders all points based on their angle from the min point
     if(low < high) {
-        int part_idx = this->sortPartition(low,high);
+        int part_idx = sortPartition(low,high);
         
         this->sortRecurse(low,part_idx-1);
         this->sortRecurse(part_idx+1,high);
@@ -52,8 +52,8 @@ int Plane::sortPartition(int low, int high) {
         //calculations to see whether j or pivot has the higher angle
         Point* j_point = this->points[j];
         Point* base = this->points[0];
-        float j_ang = (j_point->y - base->y) / (j_point->x - base->x);
-        float p_ang = (pivot->y - base->y) / (pivot->x - base->x);
+        double j_ang = (j_point->y - base->y) / (j_point->x - base->x);
+        double p_ang = (pivot->y - base->y) / (pivot->x - base->x);
         //flips all the negative slopes so that angles are counted in the right order
         j_ang = 1 / j_ang;
         p_ang = 1 / p_ang;
@@ -69,7 +69,7 @@ int Plane::sortPartition(int low, int high) {
     }
     i++;
     //swap high and i
-    Point* temp = this->points[high];
+    Point* temp = this->points[i];
     this->points[i] = this->points[high];
     this->points[high] = temp;
     return i;
@@ -92,7 +92,7 @@ void Plane::addLine(Line* l){
 }
 
 void Plane::gScan() {
-    std::stack<Point*>* s;
+    std::stack<Point*>* s = new std::stack<Point*>;
     //draws red line from start point to first point, pushes first 2 points to stack, sets counter i to 2
     int i = 2;
     addLine(new Line(this->points[0]->x, this->points[0]->y, this->points[1]->x, this->points[1]->y, sf::Color(255, 0, 0, 255)));

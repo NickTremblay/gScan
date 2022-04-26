@@ -25,22 +25,29 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
             // Ask when done and validate input
             char doneClicking;
             while(true){
-                std::cout << "Click on plane to add each point and enter 'd' here when done:" << std::endl;
+                std::cout << "Click on plane to add each point and enter 'd' here when done:";
                 if (std::cin >> doneClicking && doneClicking == 'd'){
-                    *listenForClicks = false; 
+                    *listenForClicks = false;
+                    *done = true;
                     break;
                 }else{
+                    std::cout << std::endl;
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 }
             }
+            
+            // Sort finalized points in prep for gScan
+            plane->sortPoints();
+            // Invoke gScan driver
+            plane->gScan();
             break;
         }
             
         case 2:{
             // Manually enter points
             
-            while(!(*done)){
+            while(true){
                 unsigned int x;
                 
                 // Validate x input
@@ -85,6 +92,12 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
                 
                 if(enterAnotherCoord == 'n') break;
             }
+            *done = true;
+            
+            // Sort finalized points in prep for gScan
+            plane->sortPoints();
+            // Invoke gScan driver
+            plane->gScan();
             break;
         }
             
@@ -94,14 +107,6 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
             break;
         }
     }
-    
-    // Update contextDone flag in mainframe
-    *done = true;
-    
-    // Sort finalized points in prep for gScan
-    plane->sortPoints();
-    // Invoke gScan driver
-    plane->gScan();
 }
 
 int main(){
