@@ -138,16 +138,36 @@ int main(){
     // MAIN SFML LOOP /
     /////////////////////////////////////
 
-    while (window.isOpen())
-    {
+    while (window.isOpen()){
+        // If contextMenu is open then sync window size with plane size
+        if(!contextDone){
+            window.setSize(sf::Vector2u(plane.width, plane.height));
+        }
+        
         // Event listener
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // Handle window close
-            if (event.type == sf::Event::Closed){
-                window.close();
-                break;
+            switch(event.type){
+                // Handle window close
+                case sf::Event::Closed:{
+                    window.close();
+                    break;
+                }
+                    
+                // Handle window resize
+                case sf::Event::Resized: {
+                    // Expand visible area to enter window
+                    sf::FloatRect visibleArea(sf::Vector2f(0, 0), sf::Vector2f(event.size.width, event.size.height));
+                    window.setView(sf::View(visibleArea));
+                    // Update plane size
+                    plane.width = event.size.width;
+                    plane.height = event.size.height;
+                    break;
+                }
+                    
+                default:
+                    break;
             }
         }
         
