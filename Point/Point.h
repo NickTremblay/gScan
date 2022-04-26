@@ -7,10 +7,10 @@
 class Point {
     private:
     // Angle with base point
-    float angle;
+    double angle;
     
     // Distance from base point
-    float distance;
+    double distance;
     
     public:
     Point(unsigned int x, unsigned int y, std::string c);
