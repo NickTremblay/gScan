@@ -8,6 +8,8 @@
 #include <SFML/Audio.hpp>
 #include <thread>
 #include <limits>
+#include <cstdlib>
+#include <ctime>
 #include "Plane/Plane.h"
 #include "Point/Point.h"
 #include "Line/Line.hpp"
@@ -102,8 +104,51 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
         }
             
         case 3: {
-            // Enter from file-
+            // Random point generation
             
+            // Seed randomness with current time
+            std::srand(std::time(nullptr));
+            
+            unsigned int nPoints;
+            // Validate nPoints input
+            while(true) {
+                std::cout << "Enter amount of points:";
+                // If nPoints is unsigned int and less than or equal to max points
+                if(std::cin >> nPoints && nPoints <= (plane->width + plane->height) / 50){
+                    break;
+                }else{
+                    std::cout << "Invalid amount of points. Try again." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+            }
+            
+            // Generate points
+            for(int i = 0; i < nPoints; i++){
+                unsigned int x = 20 + (rand() % (plane->width - 40));
+                unsigned int y = 20 + (rand() % (plane->height - 40));
+                plane->addPoint(new Point(x, y, "#000000"));
+            }
+            
+            // Ask when done and validate input
+            char go;
+            while(true){
+                std::cout << "Your points are rendered. Enter 'g' to go:";
+                if (std::cin >> go && go == 'g'){
+                    *done = true;
+                    break;
+                }else{
+                    std::cout << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+            }
+            
+            // Sort finalized points in prep for gScan
+            plane->sortPoints();{
+                // Invoke gScan driver if convex hull is possible
+                plane->gScan();
+            }
             break;
         }
     }
@@ -127,8 +172,8 @@ int main(){
     //Print options
     std::cout << "1) Click to add each point on the plane" << std::endl;
     std::cout << "2) Manually enter x,y coordinates for each point on the plane" << std::endl;
-    std::cout << "3) Enter path to file listing coordinates" << std::endl;
-    std::cout << "Choose from methods 1-3 for entering coordinates: ";
+    std::cout << "3) Randomly generate x amount of points" << std::endl;
+    std::cout << "Choose from methods 1-3 for entering coordinates" << std::endl;
     
     // Init flag for valid answer
     unsigned int contextChoice;
