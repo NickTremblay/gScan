@@ -17,11 +17,23 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
     // Append points to plane based on contextChoice
     switch(contextChoice){
         case 1:{
-            // Click on plane-
-            // Set window event listener for SFML window object on heap in main loop
-            // Instantiate point object using data from event object passed into handler
-            // Call w.addPoint(p)
-            // Listen for escape key to terminate event listener and call gScan driver
+            // Click on plane
+            
+            // Enable SFML event handler for clicks
+            *listenForClicks = true;
+            
+            // Ask when done and validate input
+            char doneClicking;
+            while(true){
+                std::cout << "Click on plane to add each point and enter 'd' here when done:" << std::endl;
+                if (std::cin >> doneClicking && doneClicking == 'd'){
+                    *listenForClicks = false; 
+                    break;
+                }else{
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+            }
             break;
         }
             
@@ -83,7 +95,7 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
         }
     }
     
-    // Update flag in mainframe
+    // Update contextDone flag in mainframe
     *done = true;
     
     // Sort finalized points in prep for gScan
@@ -171,6 +183,16 @@ int main(){
                     // Update plane size
                     plane.width = event.size.width;
                     plane.height = event.size.height;
+                    break;
+                }
+                
+                // Handle mouse click
+                case sf::Event::MouseButtonPressed:{
+                    // If left click and listening for clicks
+                    if(event.mouseButton.button == sf::Mouse::Left && listenForClicks){
+                        plane.addPoint(new Point(event.mouseButton.x, event.mouseButton.y, "#000000"));
+                    }
+                    
                     break;
                 }
                 
