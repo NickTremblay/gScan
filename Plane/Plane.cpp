@@ -138,11 +138,12 @@ void Plane::gScan() {
 void Plane::gRecurse(std::stack<Point*>* s, int i) {
     //initial condition: i is the last in the point vector
     if(i == (this->sortedPoints).size()-1) {
+        addLine(new Line(sortedPoints[0]->x, sortedPoints[0]->y, sortedPoints[i]->x, sortedPoints[i]->y, sf::Color::Red));
         return;
     }
     
     //draw blue line, push next point to stack
-    addLine(new Line(s->top()->x, s->top()->y, this->sortedPoints[i]->x, this->sortedPoints[i]->y, sf::Color(0, 0, 255, 255)));
+    addLine(new Line(s->top()->x, s->top()->y, this->sortedPoints[i]->x, this->sortedPoints[i]->y, sf::Color::Blue));
     s->push(this->sortedPoints[i]);
     
     //check direction of turn using top 3 points of stack
@@ -163,13 +164,14 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     
     //if left turn, call again with i+1
     if(slope2 < slope1) {
+        addLine(new Line(p2->x, p2->y, p3->x, p3->y, sf::Color::Red));
         this->gRecurse(s,i+1);
     }
     
     //if right turn, pop 2 off stack, remove their lines, keep i the same
     else {
-        addLine(new Line(p1->x, p1->y, p2->x, p2->x, sf::Color::White));
-        addLine(new Line(p2->x, p2->y, p3->x, p3->x, sf::Color::White));
+        addLine(new Line(p1->x, p1->y, p2->x, p2->y, sf::Color::White));
+        addLine(new Line(p2->x, p2->y, p3->x, p3->y, sf::Color::White));
         s->pop();
         s->pop();
         this->gRecurse(s,i);
