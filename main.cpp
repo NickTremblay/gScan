@@ -8,6 +8,7 @@
 #include <SFML/Audio.hpp>
 #include "Plane/Plane.h"
 #include "Point/Point.h"
+#include "Line/Line.hpp"
 
 
 int main(){
@@ -159,6 +160,12 @@ int main(){
         
         // Set background color and clear previous frame
         window.clear(sf::Color(255, 255, 255, 255));
+        
+        // Draw each line in plane
+        for(int i = 0; i < plane.lines.size(); i++){
+            Line* l = plane.lines[i];
+            window.draw(l->vertices, 2, sf::Lines);
+        }
         
         // Draw each point in plane
         for(int i  = 0; i < plane.points.size(); i++){

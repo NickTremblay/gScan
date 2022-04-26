@@ -85,6 +85,10 @@ void Plane::addPoint(Point* p) {
     }
 }
 
+void Plane::addLine(Line* l){
+    lines.push_back(l);
+}
+
 void Plane::gScan(std::stack<Point*>* s) {
     //draws red line from start point to first point, pushes first 2 points to stack, sets counter i to 2
     int i = 2;
