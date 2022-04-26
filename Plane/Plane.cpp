@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <cmath>
+#include <iomanip>
 #include <utility>
 #include <vector>
 
@@ -11,16 +13,18 @@ Plane::Plane(unsigned int w, unsigned int h) {
     this->height = h;
 }
 
-void Plane::sortPoints() {
-    //finds the bottom left point
+bool Plane::sortPoints() {
+    //finds the bottom-most point
     Point* min = this->points[0];
     int min_idx = 0;
     for(int i=0; i<points.size(); i++) {
         if(points[i]->y > min->y) {
-            if(points[i]->x <= min->x) {
-                min = points[i];
-                min_idx = i;
-            }
+            min = points[i];
+            min_idx = i;
+        // If y is same as bottom-most point then choose left-most
+        }else if((points[i]->y == min->y) && (points[i]->x < min->x)){
+            min = points[i];
+            min_idx = i;
         }
     }
 
@@ -31,6 +35,26 @@ void Plane::sortPoints() {
     
     //calls a quicksort function to sort the vector relative to the min
     this->sortRecurse(1,this->points.size() - 1);
+
+    // build sortedPoints
+    points[0]->angle = -2.f;
+    points[0]->distance = 0.f;
+    sortedPoints.push_back(points[0]);
+    for(int j = 1; j < points.size(); j++){
+        Point* current = points[j];
+        Point* prev = points[j - 1];
+        
+        // If angle is same as previous then keep whichever has greater distance
+        if(current->angle == prev->angle){
+            if(current->distance > prev->distance){
+                sortedPoints.pop_back();
+            }else continue;
+        }
+        
+        sortedPoints.push_back(current);
+    }
+    
+    return (sortedPoints.size() >= 3);
 }
 
 void Plane::sortRecurse(int low, int high) {
@@ -52,11 +76,18 @@ int Plane::sortPartition(int low, int high) {
         //calculations to see whether j or pivot has the higher angle
         Point* j_point = this->points[j];
         Point* base = this->points[0];
-        double j_ang = (j_point->y - base->y) / (j_point->x - base->x);
-        double p_ang = (pivot->y - base->y) / (pivot->x - base->x);
+        float j_ang = (j_point->y - base->y) / (j_point->x - base->x);
+        float p_ang = (pivot->y - base->y) / (pivot->x - base->x);
         //flips all the negative slopes so that angles are counted in the right order
         j_ang = 1 / j_ang;
         p_ang = 1 / p_ang;
+        
+        // Save angle and distance of j_point for duplicate removal
+        j_point->angle = j_ang;
+        int xDis = std::pow(j_point->x - base->x, 2);
+        int yDis = std::pow(j_point->y - base->y, 2);
+        j_point->distance = sqrt(float(xDis + yDis));
+        
         
         //actual quicksort swapping
         if(j_ang > p_ang) {
@@ -67,6 +98,7 @@ int Plane::sortPartition(int low, int high) {
             this->points[j] = temp;
         }
     }
+    
     i++;
     //swap high and i
     Point* temp = this->points[i];
@@ -95,23 +127,23 @@ void Plane::gScan() {
     std::stack<Point*>* s = new std::stack<Point*>;
     //draws red line from start point to first point, pushes first 2 points to stack, sets counter i to 2
     int i = 2;
-    addLine(new Line(this->points[0]->x, this->points[0]->y, this->points[1]->x, this->points[1]->y, sf::Color(255, 0, 0, 255)));
+    addLine(new Line(this->sortedPoints[0]->x, this->sortedPoints[0]->y, this->sortedPoints[1]->x, this->sortedPoints[1]->y, sf::Color(255, 0, 0, 255)));
     
-    s->push(this->points[0]);
-    s->push(this->points[1]);
+    s->push(this->sortedPoints[0]);
+    s->push(this->sortedPoints[1]);
     
     this->gRecurse(s,i);
 }
 
 void Plane::gRecurse(std::stack<Point*>* s, int i) {
     //initial condition: i is the last in the point vector
-    if(i == (this->points).size()-1) {
+    if(i == (this->sortedPoints).size()-1) {
         return;
     }
     
     //draw blue line, push next point to stack
-    addLine(new Line(s->top()->x, s->top()->y, this->points[i]->x, this->points[i]->y, sf::Color(0, 0, 255, 255)));
-    s->push(this->points[i]);
+    addLine(new Line(s->top()->x, s->top()->y, this->sortedPoints[i]->x, this->sortedPoints[i]->y, sf::Color(0, 0, 255, 255)));
+    s->push(this->sortedPoints[i]);
     
     //check direction of turn using top 3 points of stack
     Point* p3 = s->top();

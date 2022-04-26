@@ -5,6 +5,13 @@
 #include <string>
 
 class Point {
+    private:
+    // Angle with base point
+    float angle;
+    
+    // Distance from base point
+    float distance;
+    
     public:
     Point(unsigned int x, unsigned int y, std::string c);
     unsigned int x;
