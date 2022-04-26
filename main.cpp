@@ -82,6 +82,14 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
             break;
         }
     }
+    
+    // Update flag in mainframe
+    *done = true;
+    
+    // Sort finalized points in prep for gScan
+    plane->sortPoints();
+    // Invoke gScan driver
+    plane->gScan();
 }
 
 int main(){
@@ -127,7 +135,7 @@ int main(){
     bool contextDone = false;
     bool listenForClicks = (contextChoice == 1);
     
-    // Launch remainder of contextMenu on new thread
+    // Launch remainder of contextMenu and gScan on new thread
     std::thread contextThread(addPointsFromContextChoice, contextChoice, &plane, &contextDone, &listenForClicks);
     
     // Init SFML window
@@ -165,7 +173,8 @@ int main(){
                     plane.height = event.size.height;
                     break;
                 }
-                    
+                
+                // Ignore unhandled events
                 default:
                     break;
             }
