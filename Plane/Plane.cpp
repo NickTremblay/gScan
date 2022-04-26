@@ -130,12 +130,14 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     
     
     //if left turn, call again with i+1
-    if(slope2 / slope1) {
+    if(slope2 < slope1) {
         this->gRecurse(s,i+1);
     }
     
     //if right turn, pop 2 off stack, remove their lines, keep i the same
     else {
+        addLine(new Line(p1->x, p1->y, p2->x, p2->x, sf::Color::White));
+        addLine(new Line(p2->x, p2->y, p3->x, p3->x, sf::Color::White));
         s->pop();
         s->pop();
         this->gRecurse(s,i);
