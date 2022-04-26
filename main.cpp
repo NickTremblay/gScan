@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <thread>
+#include <limits>
 #include "Plane/Plane.h"
 #include "Point/Point.h"
 #include "Line/Line.hpp"
@@ -21,73 +22,59 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
             // Instantiate point object using data from event object passed into handler
             // Call w.addPoint(p)
             // Listen for escape key to terminate event listener and call gScan driver
-            break;}
+            break;
+        }
             
         case 2:{
-            // Manually enter
+            // Manually enter points
             
-            // Init flag for valid coords
-            bool validCoords = false;
-            while(!validCoords){
+            while(!(*done)){
                 unsigned int x;
-                std::cout << "Enter X:";
                 
-                // Validate x
-                try{
-                    std::cin >> x;
-                    
-                }catch(const std::exception&){
-                    std::cout << "Invalid x coord try again" << std::endl;
-                    continue;
-                }
-                
-                if(x > plane->width){
-                    std::cout << "Invalid x coord try again" << std::endl;
-                    continue;
+                // Validate x input
+                while(true) {
+                    std::cout << "Enter x:";
+                    if (std::cin >> x && x <= plane->width){
+                        break;
+                    }else{
+                        std::cout << "Invalid x coord. Try again." << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    }
                 }
                 
                 unsigned int y;
-                std::cout << "Enter Y:";
-                // Validate y
-                try{
-                    std::cin >> y;
-                    
-                }catch(const std::exception&){
-                    std::cout << "Invalid y coord try again" << std::endl;
-                    continue;
-                }
-                
-                if(y > plane->height){
-                    std::cout << "Invalid y coord try again" << std::endl;
-                    continue;
+                // Validate y input
+                while(true) {
+                    std::cout << "Enter y:";
+                    if (std::cin >> y && y <= plane->height){
+                        break;
+                    }else{
+                        std::cout << "Invalid y coord. Try again." << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    }
                 }
                 
                 // Declare new point on p and add to plane
-                Point* p = new Point(x, y, "#000000");
-                plane->addPoint(p);
+                plane->addPoint(new Point(x, y, "#000000"));
                 
-                // Prompt user for another coord
+                // Prompt user for another coord and validate input
                 char enterAnotherCoord;
                 while(true){
-                    // Overridden if invalid x or y
-                    std::cout << "Enter another coord(y/n)? ";
-                    
-                    try{
-                        std::cin >> enterAnotherCoord;
-                    }catch(const std::exception&){
-                        std::cout << std::endl;
-                        continue;
+                    std::cout << "Enter another coord?(y/n):";
+                    if (std::cin >> enterAnotherCoord && (enterAnotherCoord == 'y' || enterAnotherCoord == 'n')){
+                        break;
+                    }else{
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     }
-                    
-                    if(enterAnotherCoord != 'y' && enterAnotherCoord != 'n'){
-                        std::cout << std::endl;
-                        continue;
-                    }else break;
                 }
                 
                 if(enterAnotherCoord == 'n') break;
             }
-            break;}
+            break;
+        }
             
         case 3: {
             // Enter from file-
@@ -119,26 +106,17 @@ int main(){
     std::cout << "Choose from methods 1-3 for entering coordinates: ";
     
     // Init flag for valid answer
-    bool validContextChoice = false;
     unsigned int contextChoice;
     
     // Loop until valid answer is made
-    while(!validContextChoice){
-        try{
-            std::cin >> contextChoice;
-            std::cout << std::endl;
-        }catch(const std::exception&){
-            std::cout << "catch" << std::endl;
-            std::cout << "Invalid choice. Choose number from 1-3:";
-            continue;
-        }
-        
-        if(contextChoice > 0 && contextChoice <= 3){
-            validContextChoice = true;
+    while(true) {
+        std::cout << "Enter choice(1-3):";
+        if (std::cin >> contextChoice && contextChoice <= 3) {
             break;
-        }else{
-            std::cout << "contextChoice out of bounds" << std::endl;
-            std::cout << "Invalid choice. Choose number from 1-3:";
+        } else {
+            std::cout << "Invalid choice. Try again." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
     
