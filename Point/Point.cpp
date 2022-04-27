@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-Point::Point(unsigned int x, unsigned int y, std::string c) {
+Point::Point(int x, int y, std::string c) {
     this->x = x;
     this->y = y;
     this->color = c;

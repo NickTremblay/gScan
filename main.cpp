@@ -15,7 +15,7 @@
 #include "Line/Line.hpp"
 
 // Prompt user for input corresponding to context menu choice
-void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* done, bool* listenForClicks){
+void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, bool* listenForClicks){
     // Append points to plane based on contextChoice
     switch(contextChoice){
         case 1:{
@@ -50,7 +50,7 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
             // Manually enter points
             
             while(true){
-                unsigned int x;
+                int x;
                 
                 // Validate x input
                 while(true) {
@@ -64,7 +64,7 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
                     }
                 }
                 
-                unsigned int y;
+                int y;
                 // Validate y input
                 while(true) {
                     std::cout << "Enter y:";
@@ -109,7 +109,7 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
             // Seed randomness with current time
             std::srand(std::time(nullptr));
             
-            unsigned int nPoints;
+            int nPoints;
             // Validate nPoints input
             while(true) {
                 std::cout << "Enter amount of points:";
@@ -125,8 +125,8 @@ void addPointsFromContextChoice(unsigned int contextChoice, Plane* plane, bool* 
             
             // Generate points
             for(int i = 0; i < nPoints; i++){
-                unsigned int x = 20 + (rand() % (plane->width - 40));
-                unsigned int y = 20 + (rand() % (plane->height - 40));
+                int x = 20 + (rand() % (plane->width - 40));
+                int y = 20 + (rand() % (plane->height - 40));
                 plane->addPoint(new Point(x, y, "#000000"));
             }
             
@@ -176,7 +176,7 @@ int main(){
     std::cout << "Choose from methods 1-3 for entering coordinates" << std::endl;
     
     // Init flag for valid answer
-    unsigned int contextChoice;
+    int contextChoice;
     
     // Loop until valid answer is made
     while(true) {

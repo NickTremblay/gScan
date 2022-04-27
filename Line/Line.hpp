@@ -11,7 +11,7 @@ class Line{
     // Static vertex array of SFML points to pass into window.draw()
     sf::Vertex vertices[2];
     // Construct line from 2 points and a SFML color
-    Line(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, sf::Color c);
+    Line(int x1, int y1, int x2, int y2, sf::Color c);
 };
 
 #endif

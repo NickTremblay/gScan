@@ -7,8 +7,9 @@
 #include <iomanip>
 #include <utility>
 #include <vector>
+#include <algorithm>
 
-Plane::Plane(unsigned int w, unsigned int h) {
+Plane::Plane(int w, int h) {
     this->width = w;
     this->height = h;
 }
@@ -33,9 +34,40 @@ bool Plane::sortPoints() {
     this->points[0] = this->points[min_idx];
     this->points[min_idx] = temp;
     
-    //calls a quicksort function to sort the vector relative to the min
-    this->sortRecurse(1,this->points.size() - 1);
+    for(int i = 1; i < points.size(); i++){
+        double angle;
+        std::cout << points[i]->x - points[0]->x << std::endl;
+        angle = std::atan2((height - points[i]->y) - (height - points[0]->y), points[i]->x - points[0]->x);
+        angle = angle * 180 / 3.14;
+        angle = 180 - angle;
+        points[i]->angle = angle;
+    }
+    
+    // sort points by angle
+    int i, j;
+    
+    // Temp var for sort comparison
+    Point* t;
+    
+    for (i = 1; i < points.size(); i++){
+        t = points[i];
+        j = i - 1;
+ 
+        while (j >= 0 && points[j]->angle > t->angle)
+        {
+            points[j + 1] = points[j];
+            j -= 1;
+        }
+        points[j + 1] = t;
+    }
+    
+    //std::sort(this->points.begin() + 1, this->points.end());
 
+    std::cout << "Sorted points" << std::endl;
+    for(int k = 0; k < this->points.size(); k++){
+        std::cout << this->points[k]->x << "," << this->points[k]->y << " " << this->points[k]->angle << std::endl;
+    }
+    
     // build sortedPoints
     points[0]->angle = -2;
     points[0]->distance = 0;
@@ -55,71 +87,7 @@ bool Plane::sortPoints() {
         
     }
     
-    //std::cout << "Sorted points" << std::endl;
-    for(int k = 0; k < sortedPoints.size(); k++){
-        //std::cout << sortedPoints[k]->x << "," << sortedPoints[k]->y << std::endl;
-    }
-    
     return (sortedPoints.size() >= 3);
-}
-
-void Plane::sortRecurse(int low, int high) {
-    //quick sort, orders all points based on their angle from the min point
-    if(low < high) {
-        int part_idx = sortPartition(low,high);
-        
-        this->sortRecurse(low,part_idx-1);
-        this->sortRecurse(part_idx+1,high);
-    }
-}
-
-int Plane::sortPartition(int low, int high) {
-    Point* pivot = this->points[high];
-    int i = low - 1;
-    int j_ang, p_ang;
-    
-    for(int j=low; j<high; j++) {
-        //calculations to see whether j or pivot has the higher angle
-        Point* j_point = this->points[j];
-        Point* base = this->points[0];
-        double j_ang = double(((height - j_point->y) - (height - base->y)));
-        j_ang /= (j_point->x - base->x);
-        double p_ang = double(((height - pivot->y) - (height - base->y)));
-        p_ang /= (pivot->x - base->x);
-        //flips all the negative slopes so that angles are counted in the right order
-        //std::cout << "Point j(" << j_point->x << "," << j_point->y << ") and Point base(" << base->x << "," << base->y << ") have angle of " << j_ang << std::endl;
-        //std::cout << "Point pivot(" << pivot->x << "," << pivot->y << ") and Point base(" << base->x << "," << base->y << ") have angle of " << p_ang << std::endl;
-        if(j_ang < 0) {
-            j_ang = 1 / j_ang;
-        }
-        if(p_ang < 0) {
-            p_ang = 1 / p_ang;
-        }
-
-        
-        // Save angle and distance of j_point for duplicate removal
-        j_point->angle = j_ang;
-        int xDis = std::pow(j_point->x - base->x, 2);
-        int yDis = std::pow(j_point->y - base->y, 2);
-        j_point->distance = sqrt(double(xDis + yDis));
-        
-        
-        //actual quicksort swapping
-        if(j_ang < p_ang) {
-            i++;
-            //swap i and j
-            Point* temp = this->points[i];
-            this->points[i] = this->points[j];
-            this->points[j] = temp;
-        }
-    }
-    
-    i++;
-    //swap high and i
-    Point* temp = this->points[i];
-    this->points[i] = this->points[high];
-    this->points[high] = temp;
-    return i;
 }
 
 void Plane::addPoint(Point* p) {
@@ -151,12 +119,6 @@ void Plane::gScan() {
 }
 
 void Plane::gRecurse(std::stack<Point*>* s, int i) {
-    //initial condition: i is the last in the point vector
-    if(i == (this->sortedPoints).size()-1) {
-        addLine(new Line(sortedPoints[0]->x, sortedPoints[0]->y, sortedPoints[i]->x, sortedPoints[i]->y, sf::Color::Red));
-        return;
-    }
-    
     //draw blue line, push next point to stack
     addLine(new Line(s->top()->x, s->top()->y, this->sortedPoints[i]->x, this->sortedPoints[i]->y, sf::Color::Blue));
     s->push(this->sortedPoints[i]);
@@ -176,6 +138,12 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     s->push(p2);
     s->push(p3);
     
+    //initial condition: i is the last in the point vector
+    if(i == (this->sortedPoints).size()-1  && slope2 > slope1) {
+        addLine(new Line(sortedPoints[i]->x, sortedPoints[i]->y, s->top()->x, s->top()->y, sf::Color::Red));
+        addLine(new Line(sortedPoints[0]->x, sortedPoints[0]->y, sortedPoints[i]->x, sortedPoints[i]->y, sf::Color::Red));
+        return;
+    }
     
     //if left turn, call again with i+1
     if(slope2 > slope1) {

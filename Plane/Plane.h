@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 #include <stack>
+#include <algorithm>
 
 class Plane {
     private:
@@ -15,15 +16,13 @@ class Plane {
     
     
     public:
-    unsigned int width;
-    unsigned int height;
+    int width;
+    int height;
     std::vector<Point*> points;
     std::vector<Line*> lines;
     std::vector<Point*> sortedPoints;
-    Plane(unsigned int w, unsigned int h);
+    Plane(int w, int h);
     bool sortPoints(); //sorts all points in the vector, first in vector is bottom point, and remaining are sorted based on angle
-    void sortRecurse(int low, int high); //quick sort, gets called in sort points
-    int sortPartition(int low, int high); //called in quick sort to find partition and sort around partition
     void addPoint(Point* p); //update bounds & render on gui
     void addLine(Line* l); // render line
     void gScan(); //gscan algorithm
