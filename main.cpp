@@ -114,7 +114,7 @@ void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, boo
             while(true) {
                 std::cout << "Enter amount of points:";
                 // If nPoints is unsigned int and less than or equal to max points
-                if(std::cin >> nPoints && nPoints <= (plane->width + plane->height) / 50){
+                if(std::cin >> nPoints && nPoints <= (plane->width + plane->height) / 20){
                     break;
                 }else{
                     std::cout << "Invalid amount of points. Try again." << std::endl;

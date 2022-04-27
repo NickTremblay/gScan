@@ -8,6 +8,8 @@
 #include <utility>
 #include <vector>
 #include <algorithm>
+#include <thread>
+#include <chrono>
 
 Plane::Plane(int w, int h) {
     this->width = w;
@@ -36,10 +38,9 @@ bool Plane::sortPoints() {
     
     for(int i = 1; i < points.size(); i++){
         double angle;
-        std::cout << points[i]->x - points[0]->x << std::endl;
         angle = std::atan2((height - points[i]->y) - (height - points[0]->y), points[i]->x - points[0]->x);
         angle = angle * 180 / 3.14;
-        angle = 180 - angle;
+        //angle = 180 - angle;
         points[i]->angle = angle;
     }
     
@@ -63,10 +64,10 @@ bool Plane::sortPoints() {
     
     //std::sort(this->points.begin() + 1, this->points.end());
 
-    std::cout << "Sorted points" << std::endl;
+    /*std::cout << "Sorted points" << std::endl;
     for(int k = 0; k < this->points.size(); k++){
         std::cout << this->points[k]->x << "," << this->points[k]->y << " " << this->points[k]->angle << std::endl;
-    }
+    }*/
     
     // build sortedPoints
     points[0]->angle = -2;
@@ -104,6 +105,7 @@ void Plane::addPoint(Point* p) {
 
 void Plane::addLine(Line* l){
     lines.push_back(l);
+    std::this_thread::sleep_for (std::chrono::milliseconds(500));
 }
 
 void Plane::gScan() {
@@ -130,10 +132,12 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     s->pop();
     Point* p1 = s->top();
     
-    double slope1 = ((height - p2->y) - (height - p1->y)) / (p2->x - p1->x);
-    double slope2 = ((height - p3->y) - (height - p2->y)) / (p3->x - p2->x);
-    slope1 = 1/slope1;
-    slope2 = 1/slope2;
+    double slope1, slope2;
+    slope1 = std::atan2(((height - p2->y) - (height - p1->y)), (p2->x - p1->x));
+    slope2 = std::atan2(((height - p3->y) - (height - p2->y)), (p3->x - p2->x));
+    if(slope1 < 0) {slope1 += 360;}
+    if(slope2 < 0) {slope2 += 360;}
+    
     
     s->push(p2);
     s->push(p3);
@@ -141,7 +145,9 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     //initial condition: i is the last in the point vector
     if(i == (this->sortedPoints).size()-1  && slope2 > slope1) {
         addLine(new Line(sortedPoints[i]->x, sortedPoints[i]->y, s->top()->x, s->top()->y, sf::Color::Red));
+        addLine(new Line(p2->x,p2->y,p3->x,p3->y,sf::Color::Red));
         addLine(new Line(sortedPoints[0]->x, sortedPoints[0]->y, sortedPoints[i]->x, sortedPoints[i]->y, sf::Color::Red));
+        
         return;
     }
     
@@ -153,8 +159,8 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     
     //if right turn, pop 2 off stack, remove their lines, keep i the same
     else {
-        addLine(new Line(p1->x, p1->y, p2->x, p2->y, sf::Color::White));
         addLine(new Line(p2->x, p2->y, p3->x, p3->y, sf::Color::White));
+        addLine(new Line(p1->x, p1->y, p2->x, p2->y, sf::Color::White));
         s->pop();
         s->pop();
         this->gRecurse(s,i);
