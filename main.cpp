@@ -55,7 +55,7 @@ void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, boo
                 // Validate x input
                 while(true) {
                     std::cout << "Enter x:";
-                    if (std::cin >> x && x <= plane->width){
+                    if (std::cin >> x && x <= plane->getWidth()){
                         break;
                     }else{
                         std::cout << "Invalid x coord. Try again." << std::endl;
@@ -68,7 +68,7 @@ void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, boo
                 // Validate y input
                 while(true) {
                     std::cout << "Enter y:";
-                    if (std::cin >> y && y <= plane->height){
+                    if (std::cin >> y && y <= plane->getHeight()){
                         break;
                     }else{
                         std::cout << "Invalid y coord. Try again." << std::endl;
@@ -114,7 +114,7 @@ void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, boo
             while(true) {
                 std::cout << "Enter amount of points:";
                 // If nPoints is unsigned int and less than or equal to max points
-                if(std::cin >> nPoints && nPoints <= (plane->width + plane->height) / 20){
+                if(std::cin >> nPoints && nPoints <= (plane->getWidth() + plane->getHeight()) / 20){
                     break;
                 }else{
                     std::cout << "Invalid amount of points. Try again." << std::endl;
@@ -125,8 +125,8 @@ void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, boo
             
             // Generate points
             for(int i = 0; i < nPoints; i++){
-                int x = 20 + (rand() % (plane->width - 40));
-                int y = 20 + (rand() % (plane->height - 40));
+                int x = 20 + (rand() % (plane->getWidth() - 40));
+                int y = 20 + (rand() % (plane->getHeight() - 40));
                 plane->addPoint(new Point(x, y, sf::Color::Black));
             }
             
@@ -201,7 +201,7 @@ int main(){
     std::thread contextThread(addPointsFromContextChoice, contextChoice, &plane, &contextDone, &listenForClicks);
     
     // Init SFML window
-    sf::RenderWindow window(sf::VideoMode(plane.width, plane.height), "gScan");
+    sf::RenderWindow window(sf::VideoMode(plane.getWidth(), plane.getHeight()), "gScan");
     
     
     //////////////////////////////////////
@@ -211,7 +211,7 @@ int main(){
     while (window.isOpen()){
         // If contextMenu is open then sync window size with plane size
         if(!contextDone){
-            window.setSize(sf::Vector2u(plane.width, plane.height));
+            window.setSize(sf::Vector2u(plane.getWidth(), plane.getHeight()));
         }
         
         // Event listener
@@ -234,8 +234,8 @@ int main(){
                     sf::FloatRect visibleArea(sf::Vector2f(0, 0), sf::Vector2f(event.size.width, event.size.height));
                     window.setView(sf::View(visibleArea));
                     // Update plane size
-                    plane.width = event.size.width;
-                    plane.height = event.size.height;
+                    plane.setWidth(event.size.width);
+                    plane.setHeight(event.size.height);
                     break;
                 }
                 
@@ -259,14 +259,14 @@ int main(){
         window.clear(sf::Color(255, 255, 255, 255));
         
         // Draw each line in plane
-        for(int i = 0; i < plane.lines.size(); i++){
-            Line* l = plane.lines[i];
+        for(int i = 0; i < plane.getLineCount(); i++){
+            Line* l = plane.getLine(i);
             window.draw(l->vertices, 2, sf::Lines);
         }
         
         // Draw each point in plane
-        for(int i  = 0; i < plane.points.size(); i++){
-            Point* p = plane.points[i];
+        for(int j = 0; j < plane.getPointCount(); j++){
+            Point* p = plane.getPoint(j);
             sf::CircleShape circle(3.f);
             circle.setPosition(sf::Vector2f(p->x, p->y));
             circle.setFillColor(p->color);

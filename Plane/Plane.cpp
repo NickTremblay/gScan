@@ -12,19 +12,14 @@
 #include <chrono>
 
 Plane::Plane(int w, int h) {
-    this->width = w;
-    this->height = h;
+    _width = w;
+    _height = h;
 }
 
 Plane::~Plane(){
     // Deallocate all class objects from heap memory
     for(int i = 0; i < points.size(); i++){
         delete points[i];
-    }
-    
-    sortedPoints.~vector();
-    for(int j = 0; j < sortedPoints.size(); j++){
-        delete sortedPoints[j];
     }
     
     for(int k = 0; k < lines.size(); k++){
@@ -38,7 +33,7 @@ bool Plane::sortPoints() {
     Point* min = this->points[0];
     int min_idx = 0;
     for(int i=0; i<points.size(); i++) {
-        if((height - (points[i]->y) < (height - (min->y)))){
+        if((_height - (points[i]->y) < (_height - (min->y)))){
             min = points[i];
             min_idx = i;
         // If y is same as bottom-most point then choose left-most
@@ -55,7 +50,7 @@ bool Plane::sortPoints() {
     
     for(int i = 1; i < points.size(); i++){
         double angle;
-        angle = std::atan2((height - points[i]->y) - (height - points[0]->y), points[i]->x - points[0]->x);
+        angle = std::atan2((_height - points[i]->y) - (_height - points[0]->y), points[i]->x - points[0]->x);
         angle = angle * 180 / 3.14;
         //angle = 180 - angle;
         points[i]->angle = angle;
@@ -111,12 +106,12 @@ bool Plane::sortPoints() {
 void Plane::addPoint(Point* p) {
     points.push_back(p);
     
-    if(p->x >= width - 20){
-        height += 20;
+    if(p->x >= _width - 20){
+        _width += 20;
     }
     
-    if(p->y >= height - 20){
-        height += 20;
+    if(p->y >= _height - 20){
+        _height += 20;
     }
 }
 
@@ -126,18 +121,15 @@ void Plane::addLine(Line* l){
 }
 
 void Plane::gScan() {
-    std::stack<Point*>* s = new std::stack<Point*>;
+    std::stack<Point*> s;
     //draws red line from start point to first point, pushes first 2 points to stack, sets counter i to 2
     int i = 2;
     addLine(new Line(this->sortedPoints[0]->x, this->sortedPoints[0]->y, this->sortedPoints[1]->x, this->sortedPoints[1]->y, sf::Color(255, 0, 0, 255)));
     
-    s->push(this->sortedPoints[0]);
-    s->push(this->sortedPoints[1]);
+    s.push(this->sortedPoints[0]);
+    s.push(this->sortedPoints[1]);
     
-    this->gRecurse(s,i);
-    
-    // Deallocate gScan's working stack after use
-    delete s;
+    this->gRecurse(&s,i);
 }
 
 void Plane::gRecurse(std::stack<Point*>* s, int i) {
@@ -153,8 +145,8 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
     Point* p1 = s->top();
     
     double slope1, slope2;
-    slope1 = std::atan2(((height - p2->y) - (height - p1->y)), (p2->x - p1->x));
-    slope2 = std::atan2(((height - p3->y) - (height - p2->y)), (p3->x - p2->x));
+    slope1 = std::atan2(((_height - p2->y) - (_height - p1->y)), (p2->x - p1->x));
+    slope2 = std::atan2(((_height - p3->y) - (_height - p2->y)), (p3->x - p2->x));
     if(slope1 < 0) {slope1 += 360;}
     if(slope2 < 0) {slope2 += 360;}
     
@@ -185,4 +177,47 @@ void Plane::gRecurse(std::stack<Point*>* s, int i) {
         s->pop();
         this->gRecurse(s,i);
     }
+}
+
+int Plane::getWidth(){
+    return _width;
+}
+
+int Plane::getHeight(){
+    return _height;
+}
+
+void Plane::setWidth(int w){
+    _width = w;
+}
+
+void Plane::setHeight(int h){
+    _height = h;
+}
+int Plane::getPointCount(){
+    return points.size();
+}
+
+int Plane::getLineCount(){
+    return lines.size();
+}
+
+Point* Plane::getPoint(int i){
+    // Bounds check vector before accessing memory
+    if(i > points.size() || i < 0){
+        std::cout << "Error: Point " << i << " does not exist" << std::endl;
+        return nullptr;
+    }
+    
+    return points[i];
+}
+
+Line* Plane::getLine(int i){
+    // Bounds check vector before accessing memory
+    if(i > lines.size() || i < 0){
+        std::cout << "Error: Line " << i << " does not exist" << std::endl;
+        return nullptr;
+    }
+    
+    return lines[i];
 }
