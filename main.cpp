@@ -222,6 +222,9 @@ int main(){
                 // Handle window close
                 case sf::Event::Closed:{
                     window.close();
+                    // Wait for contextThread to finish, close contextThread, and return out of main()
+                    contextThread.join();
+                    return 0;
                     break;
                 }
                     
