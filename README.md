@@ -17,5 +17,5 @@ Parker Donahue, Brian Materne, Nick Tremblay, Vinai Phomsouvannady
 ## Known Bugs
 - Memory allocation issues 
 
-#Contributing 
-We are not currently accepting pull requests until a local build environment is developed, debugginng is needed first 
+## Contributing 
+We are not currently accepting pull requests until a local build environment is developed, debugging is needed first 
