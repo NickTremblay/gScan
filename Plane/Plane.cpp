@@ -16,6 +16,23 @@ Plane::Plane(int w, int h) {
     this->height = h;
 }
 
+Plane::~Plane(){
+    // Deallocate all class objects from heap memory
+    for(int i = 0; i < points.size(); i++){
+        delete points[i];
+    }
+    
+    sortedPoints.~vector();
+    for(int j = 0; j < sortedPoints.size(); j++){
+        delete sortedPoints[j];
+    }
+    
+    for(int k = 0; k < lines.size(); k++){
+        delete lines[k];
+    }
+    
+}
+
 bool Plane::sortPoints() {
     //finds the bottom-most point
     Point* min = this->points[0];
@@ -118,6 +135,9 @@ void Plane::gScan() {
     s->push(this->sortedPoints[1]);
     
     this->gRecurse(s,i);
+    
+    // Deallocate gScan's working stack after use
+    delete s;
 }
 
 void Plane::gRecurse(std::stack<Point*>* s, int i) {
