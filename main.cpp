@@ -78,7 +78,7 @@ void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, boo
                 }
                 
                 // Declare new point on p and add to plane
-                plane->addPoint(new Point(x, y, "#000000"));
+                plane->addPoint(new Point(x, y, sf::Color::Black));
                 
                 // Prompt user for another coord and validate input
                 char enterAnotherCoord;
@@ -127,7 +127,7 @@ void addPointsFromContextChoice(int contextChoice, Plane* plane, bool* done, boo
             for(int i = 0; i < nPoints; i++){
                 int x = 20 + (rand() % (plane->width - 40));
                 int y = 20 + (rand() % (plane->height - 40));
-                plane->addPoint(new Point(x, y, "#000000"));
+                plane->addPoint(new Point(x, y, sf::Color::Black));
             }
             
             // Ask when done and validate input
@@ -243,7 +243,7 @@ int main(){
                 case sf::Event::MouseButtonPressed:{
                     // If left click and listening for clicks
                     if(event.mouseButton.button == sf::Mouse::Left && listenForClicks){
-                        plane.addPoint(new Point(event.mouseButton.x, event.mouseButton.y, "#000000"));
+                        plane.addPoint(new Point(event.mouseButton.x, event.mouseButton.y, sf::Color::Black));
                     }
                     
                     break;
@@ -269,7 +269,7 @@ int main(){
             Point* p = plane.points[i];
             sf::CircleShape circle(3.f);
             circle.setPosition(sf::Vector2f(p->x, p->y));
-            circle.setFillColor(sf::Color(0, 0, 0));
+            circle.setFillColor(p->color);
             window.draw(circle);
         }
         

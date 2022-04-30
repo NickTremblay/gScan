@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <SFML/Graphics.hpp>
 
 class Point {
     private:
@@ -12,12 +13,11 @@ class Point {
     double angle;
     // Distance from base point
     double distance;
-    Point(int x, int y, std::string c);
+    Point(int x, int y, sf::Color c);
     int x;
     int y;
-    std::string color;
-    void changeColor(std::string c);
-    void drawLine(Point* p, std::string c);
+    sf::Color color;
+    void changeColor(sf::Color c);
     
     friend class Plane;
 };
